@@ -1,20 +1,30 @@
 <template>
   <!-- Offline Alert Banner -->
-  <div
-    v-if="!isOnline"
-    class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded shadow text-sm z-50 transition-opacity duration-300"
-  >
-    You are offline. Changes will be synced when you're back online.
-  </div>
+  <transition name="fade-slide" appear>
+    <div
+      v-if="!isOnline"
+      class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded shadow text-sm z-50 min-w-[320px]"
+    >
+      You are offline. Changes will be synced when you're back online.
+    </div>
+  </transition>
 
   <!-- PWA Install Prompt -->
-  <div
-    v-if="showInstallPrompt"
-    class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-800 px-4 py-2 rounded shadow text-sm z-50 transition-opacity duration-300 flex items-center gap-2"
-  >
-    <span>Install this app for a better experience!</span>
-    <button @click="promptInstall" class="bg-white text-blue-800 px-3 py-1 rounded">Install</button>
-  </div>
+  <transition name="fade-slide" appear>
+    <div
+      v-if="showInstallPrompt"
+      :class="[
+        'fixed left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-800 px-4 py-2 rounded shadow text-sm z-50 flex items-center gap-2 min-w-[320px]',
+        !isOnline ? 'top-[56px]' : 'top-2',
+      ]"
+      :style="!isOnline ? 'margin-top:4px;' : ''"
+    >
+      <span>Install this app for a better experience!</span>
+      <button @click="promptInstall" class="bg-white text-blue-800 px-3 py-1 rounded">
+        Install
+      </button>
+    </div>
+  </transition>
 
   <!-- Main UI -->
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -197,7 +207,12 @@ const processQueue = async () => {
       switch (q.method) {
         case 'POST': {
           const idx = todos.value.findIndex((t) => t.id === body.tempId)
-          const newItem = { id: data.id, text: data.todo, completed: data.completed, pendingAction: null }
+          const newItem = {
+            id: data.id,
+            text: data.todo,
+            completed: data.completed,
+            pendingAction: null,
+          }
           idx !== -1 ? todos.value.splice(idx, 1, newItem) : todos.value.push(newItem)
           break
         }
@@ -232,12 +247,21 @@ const addTodo = async () => {
   newTodo.value = ''
   const tempId = Date.now() * -1
   const body = { todo: text, completed: false, userId }
-  const queue: Queue = { url: `${API_BASE}/add`, method: 'POST', body: JSON.stringify({ ...body, tempId }) }
+  const queue: Queue = {
+    url: `${API_BASE}/add`,
+    method: 'POST',
+    body: JSON.stringify({ ...body, tempId }),
+  }
 
   if (isOnline.value) {
     try {
       const data = await apiRequest(queue)
-      todos.value.push({ id: data.id, text: data.todo, completed: data.completed, pendingAction: null })
+      todos.value.push({
+        id: data.id,
+        text: data.todo,
+        completed: data.completed,
+        pendingAction: null,
+      })
       return
     } catch {
       console.warn('API failed, queuing instead')
@@ -260,7 +284,11 @@ const deleteTodo = async (id: number) => {
     return
   }
 
-  const queue: Queue = { url: `${API_BASE}/${id}`, method: 'DELETE', body: JSON.stringify({ tempId: id }) }
+  const queue: Queue = {
+    url: `${API_BASE}/${id}`,
+    method: 'DELETE',
+    body: JSON.stringify({ tempId: id }),
+  }
 
   if (isOnline.value) {
     try {
@@ -339,10 +367,27 @@ const promptInstall = async () => {
 }
 </script>
 
-
 <style>
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
+}
+
+/* Fade and slide-down animation for banners */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-16px);
+}
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

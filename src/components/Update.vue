@@ -14,8 +14,8 @@ async function close() {
     <div class="message">
       <span> New content available, click on reload button to update. </span>
     </div>
-    <button v-if="needRefresh" @click="updateServiceWorker()">Reload</button>
-    <button @click="close">Close</button>
+    <button v-if="needRefresh" @click="updateServiceWorker()" class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 ">Reload</button>
+    <button @click="close" class="bg-white text-blue-800 px-3 py-1 rounded">Close</button>
   </div>
 </template>
 
