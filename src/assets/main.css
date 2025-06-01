@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+/* @import "@nuxt/ui";
+
+@theme static {
+  --color-primary-50: #ebfffc;
+  --color-primary-100: #cdfffb;
+  --color-primary-200: #a1fffb;
+  --color-primary-300: #60fffc;
+  --color-primary-400: #18f8f8;
+  --color-primary-500: #00dbde;
+  --color-primary-600: #00abb6;
+  --color-primary-700: #088a96;
+  --color-primary-800: #106e7a;
+  --color-primary-900: #125b67;
+  --color-primary-950: #053d47;
+}
+
+.input-field {
+  @apply w-full rounded-[4px] px-3 py-2 bg-white text-black;
+}
+
+.button {
+  @apply py-4 rounded-[4px];
+} */
