@@ -10,21 +10,11 @@
   </transition>
 
   <!-- PWA Install Prompt -->
-  <transition name="fade-slide" appear>
-    <div
-      v-if="showInstallPrompt"
-      :class="[
-        'fixed left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-800 px-4 py-2 rounded shadow text-sm z-50 flex items-center gap-2 min-w-[320px]',
-        !isOnline ? 'top-[56px]' : 'top-2',
-      ]"
-      :style="!isOnline ? 'margin-top:4px;' : ''"
-    >
-      <span>Install this app for a better experience!</span>
-      <button @click="promptInstall" class="bg-white text-blue-800 px-3 py-1 rounded">
-        Install
-      </button>
-    </div>
-  </transition>
+  <PwaInstallPrompt
+    :showInstallPrompt="showInstallPrompt"
+    :isOnline="isOnline"
+    @install="promptInstall"
+  />
 
   <!-- Main UI -->
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -103,6 +93,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue'
 import Update from './components/Update.vue'
+import PwaInstallPrompt from './components/PwaInstallPrompt.vue'
 
 // --- Types ---
 interface Todo {
